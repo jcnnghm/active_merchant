@@ -580,11 +580,17 @@ module ActiveMerchant #:nodoc:
       def add_credit_card(xml, credit_card)
         return unless credit_card
         xml.tag!('creditCard') do
-          # The credit card number used for payment of the subscription
-          xml.tag!('cardNumber', credit_card.number)
-          # The expiration date of the credit card used for the subscription
-          xml.tag!('expirationDate', expdate(credit_card))
-          xml.tag!('cardCode', credit_card.verification_value) if credit_card.verification_value?
+          if credit_card.class == ActiveMerchant::Billing::CreditCard
+            # The credit card number used for payment of the subscription
+            xml.tag!('cardNumber', credit_card.number)
+            # The expiration date of the credit card used for the subscription
+            xml.tag!('expirationDate', expdate(credit_card))
+            xml.tag!('cardCode', credit_card.verification_value) if credit_card.verification_value?
+          else
+            xml.tag!('cardNumber', credit_card[:card_number])
+            xml.tag!('expirationDate', credit_card[:expiration_date])
+            xml.tag!('cardCode', credit_card[:card_code]) if credit_card[:card_code]
+          end
         end
       end
       
