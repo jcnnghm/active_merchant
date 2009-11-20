@@ -653,12 +653,13 @@ module ActiveMerchant #:nodoc:
         )
         
         response.params['direct_response'] = parse_direct_response(response) if response.params['direct_response']
+        response.params['validation_direct_response'] = parse_direct_response(response, 'validation_direct_response') if response.params['validation_direct_response']
         response
       end
       
-      def parse_direct_response(response)
-        direct_response = {'raw' => response.params['direct_response']}
-        direct_response_fields = response.params['direct_response'].split(',')
+      def parse_direct_response(response, response_param = 'direct_response')
+        direct_response = {'raw' => response.params[response_param]}
+        direct_response_fields = response.params[response_param].split(',')
 
         direct_response.merge(
           {
